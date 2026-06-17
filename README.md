@@ -4,7 +4,7 @@ Personal Portfolio built using HTML, CSS, and JavaScript.
 # My Portfolio Website
 
 ## 🚀 Deployed Link
-- Live Demo: https://vivek-dev654.github.io/portfolio-/
+- Live Demo: https://vivek-dev654.github.io/Portfolio/
 
 ## 📝 Description
 This is my personal portfolio website built using HTML, CSS, and JavaScript. It showcases my projects, skills, and contact information.
