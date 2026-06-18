@@ -367,144 +367,42 @@ document.addEventListener("DOMContentLoaded", function () {
      before (simulating) form submission.
   ---------------------------------------------------------- */
 
-  const submitBtn      = document.getElementById("submit-btn");
-  const formFeedback   = document.getElementById("form-feedback");
+  const submitBtn = document.getElementById("submit-btn");
 
-  // Individual field references
-  const nameInput      = document.getElementById("contact-name");
-  const emailInput     = document.getElementById("contact-email");
-  const subjectInput   = document.getElementById("contact-subject");
-  const messageInput   = document.getElementById("contact-message");
+if (submitBtn) {
+  emailjs.init("TigTdutT5umvCenOt");
 
-  // Error message spans
-  const nameError      = document.getElementById("name-error");
-  const emailError     = document.getElementById("email-error");
-  const subjectError   = document.getElementById("subject-error");
-  const messageError   = document.getElementById("message-error");
+  submitBtn.addEventListener("click", function () {
 
-  // --- Helper: Show an error on a field ---
-  function showFieldError(input, errorSpan, message) {
-    if (input)     input.classList.add("is-error");
-    if (errorSpan) errorSpan.textContent = message;
-  }
+    emailjs.send("service_qjxoz5q", "template_12bwbnd", {
+      name: document.getElementById("contact-name").value,
+      email: document.getElementById("contact-email").value,
+      subject: document.getElementById("contact-subject").value,
+      message: document.getElementById("contact-message").value
+    })
+    .then(function () {
+     const feedback = document.getElementById("form-feedback");
+feedback.innerHTML = "✅ Message Sent Successfully!";
+feedback.style.color = "#00ff88";
+feedback.style.display = "block";
+feedback.style.marginTop = "15px";
+feedback.style.fontSize = "16px";
+feedback.style.fontWeight = "600";
 
-  // --- Helper: Clear an error from a field ---
-  function clearFieldError(input, errorSpan) {
-    if (input)     input.classList.remove("is-error");
-    if (errorSpan) errorSpan.textContent = "";
-  }
-
-  // --- Helper: Basic email format check ---
-  function isValidEmail(email) {
-    // Simple regex — checks for something@something.something
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  // Clear errors as user types (live feedback)
-  if (nameInput) {
-    nameInput.addEventListener("input", function () {
-      clearFieldError(nameInput, nameError);
+      document.getElementById("contact-name").value = "";
+      document.getElementById("contact-email").value = "";
+      document.getElementById("contact-subject").value = "";
+      document.getElementById("contact-message").value = "";
+    })
+    .catch(function (error) {
+      const feedback = document.getElementById("form-feedback");
+feedback.textContent = "❌ Failed to send message. Please try again.";
+feedback.style.color = "#ff4d4d";
+      console.log(error);
     });
-  }
 
-  if (emailInput) {
-    emailInput.addEventListener("input", function () {
-      clearFieldError(emailInput, emailError);
-    });
-  }
-
-  if (subjectInput) {
-    subjectInput.addEventListener("input", function () {
-      clearFieldError(subjectInput, subjectError);
-    });
-  }
-
-  if (messageInput) {
-    messageInput.addEventListener("input", function () {
-      clearFieldError(messageInput, messageError);
-    });
-  }
-
-  // --- Main submit handler ---
-  if (submitBtn) {
-    submitBtn.addEventListener("click", function () {
-      var isValid = true; // Assume valid until a check fails
-
-      // Reset all errors before re-checking
-      clearFieldError(nameInput, nameError);
-      clearFieldError(emailInput, emailError);
-      clearFieldError(subjectInput, subjectError);
-      clearFieldError(messageInput, messageError);
-
-      // Hide previous feedback message
-      if (formFeedback) {
-        formFeedback.className = "form__feedback";
-        formFeedback.textContent = "";
-      }
-
-      // --- Check: Name ---
-      if (!nameInput || nameInput.value.trim().length < 2) {
-        showFieldError(nameInput, nameError, "Please enter your full name.");
-        isValid = false;
-      }
-
-      // --- Check: Email ---
-      if (!emailInput || !emailInput.value.trim()) {
-        showFieldError(emailInput, emailError, "Please enter your email address.");
-        isValid = false;
-      } else if (!isValidEmail(emailInput.value.trim())) {
-        showFieldError(emailInput, emailError, "Please enter a valid email address.");
-        isValid = false;
-      }
-
-      // --- Check: Subject ---
-      if (!subjectInput || subjectInput.value.trim().length < 3) {
-        showFieldError(subjectInput, subjectError, "Please enter a subject.");
-        isValid = false;
-      }
-
-      // --- Check: Message ---
-      if (!messageInput || messageInput.value.trim().length < 20) {
-        showFieldError(messageInput, messageError, "Message must be at least 20 characters.");
-        isValid = false;
-      }
-
-      // --- If all checks pass, simulate submission ---
-      if (isValid) {
-        // Disable button and show loading state
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Sending...";
-
-        // Simulate a network request (replace with real fetch/EmailJS later)
-        setTimeout(function () {
-          // Show success message
-          if (formFeedback) {
-            formFeedback.textContent = "✅ Message sent! I'll get back to you soon.";
-            formFeedback.className = "form__feedback is-success";
-          }
-
-          // Reset the form fields
-          if (nameInput)    nameInput.value    = "";
-          if (emailInput)   emailInput.value   = "";
-          if (subjectInput) subjectInput.value = "";
-          if (messageInput) messageInput.value = "";
-
-          // Restore the button
-          submitBtn.disabled    = false;
-          submitBtn.textContent = "Send Message >";
-
-          // Hide the success message after 5 seconds
-          setTimeout(function () {
-            if (formFeedback) {
-              formFeedback.className  = "form__feedback";
-              formFeedback.textContent = "";
-            }
-          }, 5000);
-
-        }, 1500); // Simulated 1.5s delay
-      }
-    });
-  }
+  });
+}
 
 
   /* ----------------------------------------------------------
